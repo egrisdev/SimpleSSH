@@ -15,6 +15,10 @@ updates:
         patterns: ["WixToolset.*"]
       tests:
         patterns: ["xunit*", "Microsoft.NET.Test.Sdk", "coverlet.*"]
+    ignore:
+      # These follow the app's .NET version; move them when the app moves.
+      - dependency-name: "System.Security.Cryptography.*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: npm
     directory: /tools/testserver

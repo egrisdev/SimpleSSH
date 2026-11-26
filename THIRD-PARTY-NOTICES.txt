@@ -14,9 +14,9 @@ Components
   xterm.js 5.5 and @xterm/addon-fit                   MIT
   Microsoft.Extensions.Logging.Abstractions 8.0       MIT
   Microsoft.Extensions.DependencyInjection.Abstractions 8.0   MIT
-  System.Security.Cryptography.ProtectedData 8.0      MIT
-  .NET runtime and Windows Desktop (WPF, WinForms) 8.0 MIT
-  Microsoft Edge WebView2 SDK 1.0.4314.35             BSD-style (Microsoft)
+  System.Security.Cryptography.ProtectedData 10.0     MIT
+  .NET runtime and Windows Desktop (WPF, WinForms) 10.0 MIT
+  Microsoft Edge WebView2 SDK 1.0.4370.26             BSD-style (Microsoft)
 
 Not redistributed: the Microsoft Edge WebView2 Runtime (installed separately
 on Windows), the Windows Remote Desktop control (mstscax.dll, part of Windows), and the build/test tools (WiX Toolset, xUnit, Node.js, ssh2).
@@ -148,8 +148,8 @@ SOFTWARE.
 
 The .NET runtime incorporates further third-party components; their notices
 are published at:
-  https://github.com/dotnet/runtime/blob/release/8.0/THIRD-PARTY-NOTICES.TXT
-  https://github.com/dotnet/wpf/blob/release/8.0/THIRD-PARTY-NOTICES.TXT
+  https://github.com/dotnet/runtime/blob/release/10.0/THIRD-PARTY-NOTICES.TXT
+  https://github.com/dotnet/wpf/blob/release/10.0/THIRD-PARTY-NOTICES.TXT
 
 
 ================================================================================
