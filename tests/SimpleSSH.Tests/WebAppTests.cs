@@ -160,7 +160,9 @@ public sealed class WebAppTests
         Assert.True(start >= 0);
         var literal = script[(start + "const [user, pass] = ".Length)..(script.IndexOf("];", start, StringComparison.Ordinal) + 1)];
         // The array literal is plain JSON: it reads back as exactly the two values.
-        Assert.Equal([user, password], JsonSerializer.Deserialize<string[]>(literal));
+        var values = JsonSerializer.Deserialize<string[]>(literal);
+        Assert.NotNull(values);
+        Assert.Equal([user, password], values);
         Assert.DoesNotContain("</script>", script);
         Assert.DoesNotContain((char)0x2028, script); // a line break inside a JS string would end it
     }

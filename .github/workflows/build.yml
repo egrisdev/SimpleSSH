@@ -1,7 +1,7 @@
 name: Build
 
 # Every push and pull request: run the tests and build the installer.
-# A tag like v1.4.6 also publishes the installer as a GitHub Release.
+# A tag like v1.5.0 also publishes the installer as a GitHub Release.
 on:
   push:
     branches: [main]
@@ -21,7 +21,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - uses: actions/setup-node@v7
         with:

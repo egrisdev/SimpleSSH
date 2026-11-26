@@ -3,14 +3,14 @@
   Builds, tests and packages SimpleSSH into an MSI.
 
 .EXAMPLE
-  ./build.ps1                     # test + publish + MSI (version 1.4.6)
-  ./build.ps1 -Version 1.5.0      # bump the MSI/product version (required for upgrades)
+  ./build.ps1                     # test + publish + MSI (version 1.5.0)
+  ./build.ps1 -Version 1.6.0      # bump the MSI/product version (required for upgrades)
   ./build.ps1 -SkipTests
 
   Output: artifacts\installer\SimpleSSH-<version>-x64.msi
 #>
 param(
-    [string]$Version = "1.4.6",
+    [string]$Version = "1.5.0",
     [string]$Configuration = "Release",
     [switch]$SkipTests
 )

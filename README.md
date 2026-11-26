@@ -30,7 +30,7 @@ Download `SimpleSSH-<version>-x64.msi` from the [latest release](https://github.
 
 Uninstall from *Settings → Apps* (or `msiexec /x SimpleSSH-<version>-x64.msi`). Uninstalling removes the program but **keeps your connections** in `%APPDATA%\SimpleSSH`. Delete that folder by hand if you want them gone.
 
-Silent install for deployment: `msiexec /i SimpleSSH-1.4.6-x64.msi /qn`
+Silent install for deployment: `msiexec /i SimpleSSH-1.5.0-x64.msi /qn`
 
 ## Data files
 
@@ -198,11 +198,11 @@ Command line: `SimpleSSH.exe --connect "core-sw-01"` opens a saved connection (b
 
 ## Building
 
-Requirements: the .NET 8 SDK. Node.js is needed only to run the integration tests. WiX is pulled in automatically from NuGet as an MSBuild SDK.
+Requirements: the .NET 10 SDK. Node.js is needed only to run the integration tests. WiX is pulled in automatically from NuGet as an MSBuild SDK.
 
 ```powershell
-./build.ps1                    # tests + self-contained publish + MSI  -> artifacts\installer\SimpleSSH-1.4.6-x64.msi
-./build.ps1 -Version 1.5.0     # bump the version (needed for an MSI upgrade to replace the old one)
+./build.ps1                    # tests + self-contained publish + MSI  -> artifacts\installer\SimpleSSH-1.5.0-x64.msi
+./build.ps1 -Version 1.6.0     # bump the version (needed for an MSI upgrade to replace the old one)
 ./build.ps1 -SkipTests
 dotnet run --project src/SimpleSSH   # run from source
 ```

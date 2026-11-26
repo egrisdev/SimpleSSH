@@ -59,7 +59,7 @@ internal sealed class RdpClientHost : AxHost
     {
         try
         {
-            _cookie = new ConnectionPointCookie(GetOcx(), _sink, typeof(IMsTscAxEvents));
+            _cookie = new ConnectionPointCookie(GetOcx() ?? throw new InvalidOperationException("The Remote Desktop control has not been created."), _sink, typeof(IMsTscAxEvents));
         }
         catch (Exception ex)
         {
