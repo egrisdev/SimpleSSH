@@ -1,0 +1,35 @@
+# Dependabot checks for new versions once a week and opens a pull request per group.
+# The Build workflow runs the tests on each one; merge the ones that pass.
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      app:
+        patterns: ["SSH.NET", "Microsoft.Web.WebView2", "System.Security.Cryptography.*"]
+      installer:
+        patterns: ["WixToolset.*"]
+      tests:
+        patterns: ["xunit*", "Microsoft.NET.Test.Sdk", "coverlet.*"]
+
+  - package-ecosystem: npm
+    directory: /tools/testserver
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      test-server:
+        patterns: ["*"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      actions:
+        patterns: ["*"]
