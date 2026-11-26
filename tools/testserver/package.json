@@ -9,6 +9,6 @@
     "proxy": "node proxy.js"
   },
   "dependencies": {
-    "ssh2": "1.16.0"
+    "ssh2": "1.17.0"
   }
 }
