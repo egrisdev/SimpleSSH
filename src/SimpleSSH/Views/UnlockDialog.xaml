@@ -1,0 +1,43 @@
+<Window x:Class="SimpleSSH.Views.UnlockDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Unlock saved passwords" Width="430" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        FontFamily="Segoe UI" FontSize="13" Background="White">
+    <StackPanel Margin="20,16,20,16">
+        <DockPanel>
+            <Path DockPanel.Dock="Left" Margin="0,2,12,0" VerticalAlignment="Top" Stroke="{StaticResource AccentBrush}" StrokeThickness="1.6"
+                  StrokeLineJoin="Round" Data="M1,9 H15 V20 H1 Z M4,9 V5.5 A4,4 0 0 1 12,5.5 V9 M8,13 V16"/>
+            <StackPanel>
+                <TextBlock Text="Saved passwords are locked" FontWeight="SemiBold" FontSize="14"/>
+                <TextBlock x:Name="Reason" TextWrapping="Wrap" Foreground="{StaticResource MutedTextBrush}" Margin="0,2,0,0" Visibility="Collapsed"/>
+            </StackPanel>
+        </DockPanel>
+
+        <TextBlock x:Name="StatusText" TextWrapping="Wrap" Margin="0,12,0,0"
+                   Text="Touch your security key and enter its PIN in the Windows Security window."/>
+        <TextBlock x:Name="ErrorText" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="{StaticResource ErrorBrush}" Visibility="Collapsed"/>
+
+        <StackPanel x:Name="KeyButtons" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+            <Button x:Name="KeyButton" Content="Unlock with security key" IsDefault="True" MinWidth="170" Style="{StaticResource DialogButton}" Click="Key_Click"/>
+            <Button x:Name="NotNowButton" Content="Not now" IsCancel="True" Style="{StaticResource DialogButton}"/>
+        </StackPanel>
+
+        <TextBlock x:Name="RecoveryLinkText" Margin="0,12,0,0">
+            <Hyperlink Click="ShowRecovery_Click">Lost your security key? Use your recovery key</Hyperlink>
+        </TextBlock>
+
+        <StackPanel x:Name="RecoveryPanel" Margin="0,12,0,0" Visibility="Collapsed">
+            <TextBlock Text="Recovery key" Margin="0,0,0,4"/>
+            <TextBox x:Name="RecoveryBox" Height="28" VerticalContentAlignment="Center" Padding="4,0"
+                     FontFamily="Cascadia Mono, Consolas" CharacterCasing="Upper" AutomationProperties.Name="Recovery key"/>
+            <TextBlock x:Name="TryKeyLinkText" Margin="0,8,0,0" Visibility="Collapsed">
+                <Hyperlink Click="Key_Click">Try my security key anyway</Hyperlink>
+            </TextBlock>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                <Button x:Name="RecoveryButton" Content="Unlock" Style="{StaticResource DialogButton}" Click="Recovery_Click"/>
+                <Button x:Name="RecoveryCancelButton" Content="Not now" Style="{StaticResource DialogButton}" Click="NotNow_Click"/>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</Window>

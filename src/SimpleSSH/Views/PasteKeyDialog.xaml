@@ -1,0 +1,37 @@
+<Window x:Class="SimpleSSH.Views.PasteKeyDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Paste private key" Width="560" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        FontFamily="Segoe UI" FontSize="13" Background="White">
+    <StackPanel Margin="20,16,20,16">
+        <TextBlock Text="Paste a private key" FontWeight="SemiBold" FontSize="14"/>
+        <TextBlock TextWrapping="Wrap" Margin="0,6,0,0">
+            On the Linux machine that has the key, run <Run FontFamily="Cascadia Mono, Consolas" Background="#F1F5F9" Text=" cat ~/.ssh/id_ed25519 "/>
+            (or <Run FontFamily="Cascadia Mono, Consolas" Background="#F1F5F9" Text=" id_rsa "/>), select everything from
+            <Run FontFamily="Cascadia Mono, Consolas" Text="-----BEGIN"/> to <Run FontFamily="Cascadia Mono, Consolas" Text="-----END … KEY-----"/>, copy, and paste it here.
+        </TextBlock>
+        <TextBox x:Name="KeyBox" Height="170" Margin="0,10,0,0" AcceptsReturn="True" TextWrapping="NoWrap"
+                 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                 FontFamily="Cascadia Mono, Consolas" FontSize="11.5" Padding="4" TextChanged="Key_Changed"
+                 AutomationProperties.Name="Private key"/>
+        <Grid Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Passphrase" Style="{StaticResource FieldLabel}"/>
+            <PasswordBox Grid.Column="1" x:Name="PassphraseBox" Style="{StaticResource FieldBox}" PasswordChanged="Key_Changed"
+                         ToolTip="Only if the key has one"/>
+        </Grid>
+        <TextBlock x:Name="StatusText" TextWrapping="Wrap" Margin="0,8,0,0" FontSize="12" MinHeight="16"/>
+        <Border Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,10,0,0">
+            <TextBlock TextWrapping="Wrap" FontSize="11.5" Foreground="#1E3A8A"
+                       Text="SimpleSSH keeps the key encrypted with your Windows account (and your security key, if that is on); no key file is written. The server must already list the matching public key in ~/.ssh/authorized_keys. To make a new key for a server instead, use Switch to key login."/>
+        </Border>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+            <Button x:Name="OkButton" Content="Use this key" IsDefault="True" IsEnabled="False" Style="{StaticResource DialogButton}" MinWidth="100" Click="Ok_Click"/>
+            <Button Content="Cancel" IsCancel="True" Style="{StaticResource DialogButton}"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

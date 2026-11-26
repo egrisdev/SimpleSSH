@@ -1,0 +1,20 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+  <!--
+    Builds SimpleSSH-<version>-x64.msi from the self-contained publish output.
+    Normally invoked by build.ps1, which publishes the app first:
+      dotnet build installer\SimpleSSH.Installer.wixproj -c Release -p:ProductVersion=1.4.6 -p:PublishDir=<abs path>
+  -->
+  <PropertyGroup>
+    <ProductVersion Condition="'$(ProductVersion)' == ''">1.4.6</ProductVersion>
+    <PublishDir Condition="'$(PublishDir)' == ''">$(MSBuildThisFileDirectory)..\artifacts\publish\</PublishDir>
+    <OutputName>SimpleSSH-$(ProductVersion)-x64</OutputName>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <OutputPath>$(MSBuildThisFileDirectory)..\artifacts\installer\</OutputPath>
+    <DefineConstants>ProductVersion=$(ProductVersion);PublishDir=$(PublishDir);RepoRoot=$(MSBuildThisFileDirectory)..</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="5.0.2" />
+  </ItemGroup>
+</Project>

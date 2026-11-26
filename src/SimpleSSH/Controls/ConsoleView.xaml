@@ -1,0 +1,38 @@
+<UserControl x:Class="SimpleSSH.Controls.ConsoleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+             Background="{StaticResource TerminalBackgroundBrush}" FontFamily="Segoe UI" FontSize="13">
+    <DockPanel>
+        <!-- A short note from the controller check, e.g. "only the web page: no console licence". -->
+        <Border x:Name="NoticeBar" DockPanel.Dock="Top" Visibility="Collapsed" Background="#FEF3C7" BorderBrush="#FCD34D"
+                BorderThickness="0,0,0,1" Padding="10,5">
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Content="✕" Padding="6,0" Background="Transparent" BorderThickness="0"
+                        Click="DismissNotice_Click" ToolTip="Hide this note" VerticalAlignment="Center"/>
+                <TextBlock x:Name="NoticeText" TextWrapping="Wrap" Foreground="#78350F" VerticalAlignment="Center"/>
+            </DockPanel>
+        </Border>
+        <Grid>
+            <!-- Hidden (not collapsed) until there is something to show: WPF can't draw over the browser window. -->
+            <wv2:WebView2 x:Name="WebView" Visibility="Hidden"/>
+
+            <StackPanel x:Name="Overlay" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="560">
+                <TextBlock x:Name="OverlayTitle" FontSize="16" FontWeight="SemiBold" Foreground="#E5E7EB"
+                           HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                <TextBlock x:Name="OverlayText" Foreground="#9CA3AF" Margin="0,8,0,0"
+                           HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                <TextBox x:Name="FingerprintText" Visibility="Collapsed" IsReadOnly="True" Margin="0,10,0,0" Padding="6,3"
+                         Background="#1F2937" Foreground="#E5E7EB" BorderBrush="#374151" FontFamily="Cascadia Mono, Consolas"
+                         FontSize="12" TextWrapping="Wrap" HorizontalContentAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,18,0,0">
+                    <Button x:Name="TrustButton" Content="Trust and connect" Padding="16,5" Margin="0,0,8,0" Click="Trust_Click"/>
+                    <Button x:Name="ConnectButton" Content="Connect again" Padding="16,5" Margin="0,0,8,0" Click="Connect_Click"/>
+                    <Button x:Name="CancelButton" Content="Cancel" Padding="16,5" Margin="0,0,8,0" Click="Cancel_Click"/>
+                    <Button x:Name="BrowserButton" Content="Open in browser" Padding="16,5" Click="Browser_Click"
+                            ToolTip="Open this page in your web browser instead (you log in there)"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</UserControl>

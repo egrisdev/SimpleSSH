@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <!-- Hosts the Windows Remote Desktop ActiveX control in RDP tabs. -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>SimpleSSH</AssemblyName>
+    <RootNamespace>SimpleSSH</RootNamespace>
+    <ApplicationIcon>Assets\SimpleSSH.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Version>1.4.6</Version>
+    <Product>SimpleSSH</Product>
+    <Company>SimpleSSH contributors</Company>
+    <Authors>SimpleSSH contributors</Authors>
+    <Description>Tabbed SSH and Remote Desktop client with a tagged connection tree</Description>
+    <Copyright>Copyright (c) 2026 SimpleSSH contributors. MIT License.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <!-- Security key interop (webauthn.dll) passes pointer-based structures. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- WPF app: keep WinForms/System.Drawing types out of the global namespace (Application, MessageBox, Brush...). -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleSSH.Core\SimpleSSH.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\**\*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Resource Include="Assets\SimpleSSH.ico" />
+    <!-- Ship the license and third-party notices next to the exe (and so in the MSI). -->
+    <None Include="..\..\LICENSE" Link="LICENSE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="..\..\THIRD-PARTY-NOTICES.txt" Link="THIRD-PARTY-NOTICES.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

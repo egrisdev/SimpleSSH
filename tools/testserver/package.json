@@ -1,0 +1,14 @@
+{
+  "name": "simplessh-testserver",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tiny local SSH server (fake shell, exec, SCP, SFTP sandbox, port forwarding, password/keyboard-interactive/MFA auth) plus a SOCKS4/SOCKS5/HTTP CONNECT proxy, used to test SimpleSSH.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "proxy": "node proxy.js"
+  },
+  "dependencies": {
+    "ssh2": "1.16.0"
+  }
+}

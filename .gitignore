@@ -1,0 +1,12 @@
+bin/
+obj/
+artifacts/
+.vs/
+*.user
+*.suo
+TestResults/
+
+# Test SSH server
+tools/testserver/node_modules/
+tools/testserver/host_rsa.pem
+tools/testserver/sftp-root/

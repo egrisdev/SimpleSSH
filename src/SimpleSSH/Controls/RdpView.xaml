@@ -1,0 +1,25 @@
+<UserControl x:Class="SimpleSSH.Controls.RdpView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+             Background="{StaticResource TerminalBackgroundBrush}" FontFamily="Segoe UI" FontSize="13">
+    <Grid>
+        <!-- Hidden (not collapsed) until connected. Sized in code to exactly the remote resolution, so the picture is
+             never stretched by a pixel (which blurs text); at most a 1 px strip of background shows at the edge. -->
+        <wfi:WindowsFormsHost x:Name="Host" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <!-- Connecting / disconnected messages (WPF can't draw on top of the RDP window, so it is hidden meanwhile). -->
+        <StackPanel x:Name="Overlay" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="520">
+            <TextBlock x:Name="OverlayTitle" FontSize="16" FontWeight="SemiBold" Foreground="#E5E7EB"
+                       HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+            <TextBlock x:Name="OverlayText" Foreground="#9CA3AF" Margin="0,8,0,0"
+                       HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,18,0,0">
+                <Button x:Name="ConnectButton" Content="Connect again" Padding="16,5" Click="Connect_Click"/>
+                <Button x:Name="CancelButton" Content="Cancel" Padding="16,5" Click="Cancel_Click"/>
+                <Button x:Name="ExternalButton" Content="Open in Remote Desktop window" Padding="16,5" Margin="8,0,0,0" Click="External_Click"
+                        ToolTip="Open this connection in the Windows Remote Desktop app (mstsc) instead"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

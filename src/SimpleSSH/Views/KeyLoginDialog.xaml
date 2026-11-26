@@ -1,0 +1,102 @@
+<Window x:Class="SimpleSSH.Views.KeyLoginDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Switch to key login" Width="540" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        FontFamily="Segoe UI" FontSize="13" Background="White">
+    <Window.Resources>
+        <Style x:Key="StepIcon" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Width" Value="22"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="Foreground" Value="#9CA3AF"/>
+            <Setter Property="Text" Value="○"/>
+        </Style>
+        <Style x:Key="StepTitle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style x:Key="StepDetail" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+    </Window.Resources>
+
+    <StackPanel Margin="20,16,20,16">
+        <TextBlock x:Name="Heading" FontWeight="SemiBold" FontSize="15" TextWrapping="Wrap"/>
+        <TextBlock x:Name="SubHeading" Foreground="{StaticResource MutedTextBrush}" Margin="0,2,0,0" FontFamily="Cascadia Mono, Consolas" FontSize="12"/>
+        <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
+            SimpleSSH makes a key for this server, adds it using the login that works today, and then logs in with the key
+            alone to prove it. Nothing else changes on the server. For Linux and other Unix servers.
+        </TextBlock>
+        <TextBlock x:Name="ByHandLinkText" TextWrapping="Wrap" Margin="0,6,0,0" FontSize="12">
+            Server already refuses passwords? <Hyperlink Click="ByHand_Click">Add the key by hand instead</Hyperlink>
+        </TextBlock>
+
+        <!-- Steps -->
+        <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,14,0,0">
+            <StackPanel>
+                <DockPanel>
+                    <TextBlock x:Name="Icon1" Style="{StaticResource StepIcon}" DockPanel.Dock="Left"/>
+                    <StackPanel>
+                        <TextBlock Text="Create a key for this server" Style="{StaticResource StepTitle}"/>
+                        <TextBlock x:Name="Detail1" Style="{StaticResource StepDetail}" Text="Ed25519, kept encrypted inside SimpleSSH. No key file is written."/>
+                    </StackPanel>
+                </DockPanel>
+                <DockPanel Margin="0,10,0,0">
+                    <TextBlock x:Name="Icon2" Style="{StaticResource StepIcon}" DockPanel.Dock="Left"/>
+                    <StackPanel>
+                        <TextBlock Text="Add it to the server" Style="{StaticResource StepTitle}"/>
+                        <TextBlock x:Name="Detail2" Style="{StaticResource StepDetail}" Text="Logs in as usual (your password) and adds the public key to ~/.ssh/authorized_keys."/>
+                    </StackPanel>
+                </DockPanel>
+                <DockPanel Margin="0,10,0,0">
+                    <TextBlock x:Name="Icon3" Style="{StaticResource StepIcon}" DockPanel.Dock="Left"/>
+                    <StackPanel>
+                        <TextBlock Text="Log in with the key alone" Style="{StaticResource StepTitle}"/>
+                        <TextBlock x:Name="Detail3" Style="{StaticResource StepDetail}" Text="A fresh login with no password, to prove the key works."/>
+                    </StackPanel>
+                </DockPanel>
+            </StackPanel>
+        </Border>
+
+        <TextBlock x:Name="ErrorText" TextWrapping="Wrap" Margin="0,10,0,0" Foreground="{StaticResource ErrorBrush}" Visibility="Collapsed"/>
+
+        <!-- Success -->
+        <Border x:Name="SuccessPanel" Visibility="Collapsed" Background="#ECFDF3" BorderBrush="#A6E3BC" BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,12,0,0">
+            <StackPanel>
+                <TextBlock x:Name="SuccessText" TextWrapping="Wrap" Foreground="#14532D" FontWeight="SemiBold"/>
+                <CheckBox x:Name="ForgetPasswordBox" Margin="0,8,0,0" IsChecked="True" Content="Forget the saved password (the key is enough)"
+                          ToolTip="SimpleSSH stops storing the password for this connection. It is still used below if you lock down the server."/>
+            </StackPanel>
+        </Border>
+
+        <!-- Lock down -->
+        <StackPanel x:Name="LockPanel" Visibility="Collapsed" Margin="0,14,0,0">
+            <TextBlock Text="Lock down the server (optional)" FontWeight="SemiBold"/>
+            <TextBlock TextWrapping="Wrap" Margin="0,4,0,0">
+                Turn off password logins over SSH, so only keys get in. Console logins keep using your password.
+                SimpleSSH keeps a key login open while it changes the setting, checks that a new key login still works,
+                and undoes the change if it doesn't.
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap" Margin="0,4,0,0" FontSize="12" Foreground="{StaticResource MutedTextBrush}">
+                Needs sudo. Adds one file: <Run FontFamily="Cascadia Mono, Consolas" Text="/etc/ssh/sshd_config.d/00-simplessh-keys-only.conf"/>
+            </TextBlock>
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <Button x:Name="LockButton" Content="Turn off password logins" Padding="12,0" Height="30" Click="LockDown_Click"/>
+                <TextBlock x:Name="UndoLinkText" VerticalAlignment="Center" Margin="14,0,0,0">
+                    <Hyperlink Click="Undo_Click">Turn password logins back on</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+            <TextBlock x:Name="LockResult" TextWrapping="Wrap" Margin="0,10,0,0" Visibility="Collapsed"/>
+        </StackPanel>
+
+        <TextBlock x:Name="BusyText" Margin="0,12,0,0" Foreground="{StaticResource MutedTextBrush}" Visibility="Collapsed"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button x:Name="StartButton" Content="Start" IsDefault="True" Style="{StaticResource DialogButton}" Click="Start_Click"/>
+            <Button x:Name="CloseButton" Content="Cancel" IsCancel="True" Style="{StaticResource DialogButton}"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

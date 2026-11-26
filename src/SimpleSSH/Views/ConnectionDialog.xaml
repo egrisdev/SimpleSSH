@@ -1,0 +1,185 @@
+<Window x:Class="SimpleSSH.Views.ConnectionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Connection" Width="560" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        FontFamily="Segoe UI" FontSize="13" Background="White">
+    <Grid Margin="20,18,20,16" Grid.IsSharedSizeScope="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="Label"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Type -->
+        <TextBlock Grid.Row="0" Text="Type" Style="{StaticResource FieldLabel}"/>
+        <UniformGrid Grid.Row="0" Grid.Column="1" Columns="2" Margin="0,2,0,12">
+            <RadioButton x:Name="SshRadio" Content="SSH" GroupName="Protocol" Margin="0,0,12,6" Checked="Protocol_Changed"/>
+            <RadioButton x:Name="RdpRadio" Content="Remote Desktop (RDP)" GroupName="Protocol" Margin="0,0,0,6" Checked="Protocol_Changed"/>
+            <RadioButton x:Name="ConsoleRadio" Content="Server console (iLO, iDRAC)" GroupName="Protocol" Margin="0,0,12,0" Checked="Protocol_Changed"
+                         ToolTip="HPE iLO or Dell iDRAC: opens straight into the remote console, already logged in"/>
+            <RadioButton x:Name="WebRadio" Content="Web app (vSphere, ESXi, Proxmox)" GroupName="Protocol" Checked="Protocol_Changed"
+                         ToolTip="A web page with a login, such as vCenter, ESXi or Proxmox: opens in a tab, already logged in"/>
+        </UniformGrid>
+
+        <!-- Name -->
+        <TextBlock Grid.Row="1" Text="Name" Style="{StaticResource FieldLabel}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="NameBox" Style="{StaticResource FieldBox}" Margin="0,0,0,8"
+                 ToolTip="Display name in the tree. Defaults to the host."/>
+
+        <!-- Host + port -->
+        <TextBlock Grid.Row="2" Text="Host" Style="{StaticResource FieldLabel}"/>
+        <Grid Grid.Row="2" Grid.Column="1" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="70"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBox x:Name="HostBox" Style="{StaticResource FieldBox}" ToolTip="Hostname or IP address. You can also type user@host:port."
+                     LostFocus="HostBox_LostFocus" TextChanged="HostBox_TextChanged"/>
+            <TextBlock Grid.Column="1" Text="Port" Margin="12,0,8,0" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="2" x:Name="PortBox" Style="{StaticResource FieldBox}" Text="22"/>
+            <!-- Shown when the host is malformed, with a one-click fix when there is an obvious one -->
+            <TextBlock Grid.Row="1" Grid.ColumnSpan="3" x:Name="HostHint" Margin="0,4,0,0" FontSize="11.5" TextWrapping="Wrap"
+                       Foreground="{StaticResource ErrorBrush}" Visibility="Collapsed">
+                <Run x:Name="HostHintText"/>
+                <Hyperlink x:Name="HostFixLink" Click="HostFix_Click"><Run x:Name="HostFixText"/></Hyperlink>
+            </TextBlock>
+        </Grid>
+
+        <!-- Username -->
+        <TextBlock Grid.Row="3" Text="Username" Style="{StaticResource FieldLabel}"/>
+        <TextBox Grid.Row="3" Grid.Column="1" x:Name="UserBox" Style="{StaticResource FieldBox}" Margin="0,0,0,8"/>
+        <TextBlock Grid.Row="4" Grid.Column="1" x:Name="UserHint" Margin="0,-6,0,8" FontSize="11" Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap"
+                   Visibility="Collapsed"/>
+
+        <!-- Password -->
+        <TextBlock Grid.Row="5" Text="Password" Style="{StaticResource FieldLabel}"/>
+        <Grid Grid.Row="5" Grid.Column="1" Margin="0,0,0,2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <PasswordBox x:Name="PasswordBox" Style="{StaticResource FieldBox}"/>
+            <TextBox x:Name="PasswordText" Style="{StaticResource FieldBox}" Visibility="Collapsed"/>
+            <CheckBox Grid.Column="1" x:Name="ShowPassword" Content="Show" Margin="10,0,0,0" VerticalAlignment="Center"
+                      Checked="ShowPassword_Changed" Unchecked="ShowPassword_Changed"/>
+        </Grid>
+        <TextBlock Grid.Row="6" Grid.Column="1" Margin="0,0,0,8" FontSize="11" Foreground="{StaticResource MutedTextBrush}"
+                   Text="Leave empty to be asked when connecting."/>
+
+        <!-- Private key -->
+        <TextBlock Grid.Row="7" x:Name="KeyLabel" Text="Private key" Style="{StaticResource FieldLabel}"/>
+        <Grid Grid.Row="7" Grid.Column="1" x:Name="KeyGrid" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="KeyPathBox" Style="{StaticResource FieldBox}" ToolTip="Optional. OpenSSH, PEM or PuTTY (.ppk) private key file."/>
+            <Button Grid.Column="1" x:Name="BrowseKeyButton" Content="Browse…" Margin="8,0,0,0" Padding="10,0" Click="BrowseKey_Click"/>
+            <Button Grid.Column="2" x:Name="PasteKeyButton" Content="Paste…" Margin="6,0,0,0" Padding="10,0" Click="PasteKey_Click"
+                    ToolTip="Paste a private key, for example the output of cat ~/.ssh/id_ed25519 on Linux. SimpleSSH keeps it encrypted; no file is written."/>
+            <Button Grid.Column="3" x:Name="NewKeyButton" Content="New key…" Margin="6,0,0,0" Padding="10,0" Click="NewKey_Click"
+                    ToolTip="Make a key for this server and add it yourself (for servers that already refuse passwords). SimpleSSH gives you a command to paste on the server, then tests it."/>
+            <!-- Shown instead of the path when the key is kept inside SimpleSSH. -->
+            <Border x:Name="StoredKeyPanel" Grid.ColumnSpan="4" Visibility="Collapsed" BorderBrush="#BFDBFE" BorderThickness="1"
+                    Background="#EFF6FF" CornerRadius="3" Padding="8,3">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="Remove" Padding="8,0" Margin="6,0,0,0" Click="RemoveStoredKey_Click"
+                            ToolTip="Stop using this key for the connection"/>
+                    <Button DockPanel.Dock="Right" Content="Copy public key" Padding="8,0" Click="CopyPublicKey_Click"
+                            ToolTip="Copy the line that goes into ~/.ssh/authorized_keys on a server"/>
+                    <TextBlock x:Name="StoredKeyText" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="#1E3A8A" FontSize="12"/>
+                </DockPanel>
+            </Border>
+        </Grid>
+
+        <TextBlock Grid.Row="8" x:Name="PassphraseLabel" Text="Key passphrase" Style="{StaticResource FieldLabel}"/>
+        <PasswordBox Grid.Row="8" Grid.Column="1" x:Name="PassphraseBox" Style="{StaticResource FieldBox}" Margin="0,0,0,8"/>
+
+        <!-- Tags -->
+        <TextBlock Grid.Row="9" Text="Tags" Style="{StaticResource FieldLabel}"/>
+        <Grid Grid.Row="9" Grid.Column="1" Margin="0,0,0,2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="140"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="TagsBox" Style="{StaticResource FieldBox}" ToolTip="Comma separated, e.g. Switches, Core"/>
+            <ComboBox Grid.Column="1" x:Name="ExistingTags" Margin="8,0,0,0" Height="26" VerticalContentAlignment="Center"
+                      SelectionChanged="ExistingTags_SelectionChanged" ToolTip="Add an existing tag"/>
+        </Grid>
+        <TextBlock Grid.Row="10" Grid.Column="1" Margin="0,0,0,8" FontSize="11" Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap"
+                   Text="Comma separated, e.g. &quot;Switches, Building A&quot;. The connection appears under each tag."/>
+
+        <!-- Notes -->
+        <TextBlock Grid.Row="11" Text="Notes" Style="{StaticResource FieldLabel}" VerticalAlignment="Top" Margin="0,4,12,0"/>
+        <TextBox Grid.Row="11" Grid.Column="1" x:Name="NotesBox" Height="56" TextWrapping="Wrap" AcceptsReturn="True"
+                 VerticalScrollBarVisibility="Auto" Padding="4,2" Margin="0,0,0,10"/>
+
+        <!-- Advanced: tunnels + proxy (collapsed unless used) -->
+        <Expander Grid.Row="12" Grid.ColumnSpan="2" x:Name="AdvancedExpander" Header="Advanced: terminal, tunnels and proxy" Margin="0,0,0,10">
+            <Grid Margin="0,8,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Label"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="4" Text="Terminal" Style="{StaticResource FieldLabel}" Margin="0,10,12,0"/>
+                <CheckBox Grid.Row="4" Grid.Column="1" x:Name="CopyOnSelectBox" Margin="0,10,0,0" VerticalAlignment="Center"
+                          Content="Copy text as soon as I select it (right click pastes)"/>
+
+                <TextBlock Grid.Row="0" Text="Tunnels" Style="{StaticResource FieldLabel}" VerticalAlignment="Top" Margin="0,4,12,0"/>
+                <TextBox Grid.Row="0" Grid.Column="1" x:Name="TunnelsBox" Height="58" AcceptsReturn="True" TextWrapping="NoWrap"
+                         VerticalScrollBarVisibility="Auto" Padding="4,2" FontFamily="Cascadia Mono, Consolas" AutomationProperties.Name="Tunnels"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Margin="0,2,0,10" FontSize="11" Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap"
+                           Text="One per line, opened with the terminal. L 8080:db:5432 (local port to db:5432) · R 9000:localhost:22 (server port back to this PC) · D 1080 (SOCKS proxy)"/>
+
+                <TextBlock Grid.Row="2" Text="Proxy" Style="{StaticResource FieldLabel}"/>
+                <TextBox Grid.Row="2" Grid.Column="1" x:Name="ProxyBox" Style="{StaticResource FieldBox}" FontFamily="Cascadia Mono, Consolas" AutomationProperties.Name="Proxy"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Margin="0,2,0,0" FontSize="11" Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap"
+                           Text="Optional. socks5://host:1080, socks4://host:1080 or http://proxy:3128 (user:password@ allowed, saved encrypted)."/>
+            </Grid>
+        </Expander>
+
+        <!-- Credential storage note + validation -->
+        <Border Grid.Row="13" Grid.ColumnSpan="2" Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,10">
+            <TextBlock x:Name="SecurityNote" TextWrapping="Wrap" FontSize="11.5" Foreground="#1E3A8A"/>
+        </Border>
+
+        <DockPanel Grid.Row="14" Grid.ColumnSpan="2" LastChildFill="False">
+            <TextBlock x:Name="ErrorText" DockPanel.Dock="Left" Foreground="{StaticResource ErrorBrush}" VerticalAlignment="Center"
+                       TextWrapping="Wrap" MaxWidth="260"/>
+            <Button DockPanel.Dock="Right" Content="Cancel" IsCancel="True" Style="{StaticResource DialogButton}"/>
+            <Button DockPanel.Dock="Right" x:Name="OkButton" Content="Save" IsDefault="True" Style="{StaticResource DialogButton}" Click="Ok_Click"/>
+        </DockPanel>
+    </Grid>
+</Window>
